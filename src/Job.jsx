@@ -13,7 +13,7 @@ export function Job({ completed, id, jobTitle, companyTitle, toggleJob, deleteJo
         </label>
         <button 
         onClick={() => deleteJob(id)}  
-        className="btn btn-danger">delete
+        className="btn btn-danger">rejected
         </button>
     </li>
     )

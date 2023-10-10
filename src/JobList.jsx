@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import { Job } from "./Job.jsx"
-// eslint-disable-next-line react/prop-types
+
 export function JobList({ jobs, toggleJob, deleteJob }) {
     return (
     <ul className="list">
