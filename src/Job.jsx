@@ -9,7 +9,7 @@ export function Job({ completed, id, jobTitle, companyTitle, toggleJob, deleteJo
                 checked = {completed} 
                 onChange={e => toggleJob(id, e.target.checked)}
                 />
-            {jobTitle + companyTitle}
+            {jobTitle + " at " + companyTitle}
         </label>
         <button 
         onClick={() => deleteJob(id)}  

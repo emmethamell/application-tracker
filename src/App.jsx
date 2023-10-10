@@ -5,29 +5,8 @@ import { JobList } from "./JobList"
 //with components in react, you can only ever return one element. In this case everything is inside the one div
 //if you want to return multiple elements from a component you can use a fragment, which is like a div wrapping everything but its empty
 export default function App() {
-  //FOR COMPANY
-  const[companies, setCompanies] = useState([]) //change default to get the local storage
-
-  function addCompany(title) {
-    setCompanies((currentCompanies) => {
-      return [
-        ...currentCompanies, 
-        { id: crypto.randomUUID(), title, completed: false},
-      ]  
-    })
-  }
-
-  //call when the job is deleted
-  function deleteCompany(id) {
-    setCompanies(currentCompanies => {
-      return currentCompanies.filter(company => company.id != id)
-    })
-  }
 
 
-
-
-  //FOR JOBS
   const [jobs, setJobs] = useState(() => {
     const localValue = localStorage.getItem("ITEMS");
     if (localValue === null) return []
@@ -38,7 +17,7 @@ export default function App() {
     localStorage.setItem("ITEMS", JSON.stringify(jobs));
   }, [jobs])
 
-//for both job and company
+
   function addJob(jobTitle, companyTitle) {
 
     let id = crypto.randomUUID();
@@ -48,13 +27,6 @@ export default function App() {
         { id, jobTitle, completed: false, companyTitle},
       ]  
     })
-    setCompanies((currentCompanies) => {
-      return [
-        ...currentCompanies,
-        { id, companyTitle, completed: false}
-      ]
-    })
-    
   }
   function toggleJob(id, completed) {
     setJobs(currentJobs => {
