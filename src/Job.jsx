@@ -1,19 +1,18 @@
 // eslint-disable-next-line react/prop-types
-export function Job({ completed, id, jobTitle, companyTitle, toggleJob, deleteJob}) {
+export function Job({ id, jobTitle, companyTitle, deleteJob, deleteInterview}) {
 
     return (
     <li>
-        <label>
-            <input 
-                type="checkbox" 
-                checked = {completed} 
-                onChange={e => toggleJob(id, e.target.checked)}
-                />
             {jobTitle + " at " + companyTitle}
-        </label>
         <button 
-        onClick={() => deleteJob(id)}  
-        className="btn btn-danger">rejected
+            onClick={() => deleteJob(id)}
+            className="btn btn-danger">
+            rejected
+        </button>
+        <button
+            onClick={() => deleteInterview(id)}
+            className="btn btn-success">
+            interview
         </button>
     </li>
     )

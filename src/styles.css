@@ -1,15 +1,38 @@
 * {
-    font-family: Arial, Helvetica, sans-serif;
+    font-style: roboto;
     box-sizing: border-box;
   }
   
   body {
-    background: #333;
+    background: #353434;
     color: hsl(200, 100%, 90%);
-    max-width: 400px;
     padding: 1rem;
     margin: 0 auto;
   }
+  .container {
+    text-align: center;
+  }
+  .container > div {
+    width: 400px;
+    height: 400px;
+
+  }
+  .left {
+    float: left;
+    margin-top: 10px;
+  }
+
+  .center {
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+
+  }
+
+  .right {
+    float: right;
+  }
+
   
   .new-job-form {
     display: flex;
@@ -39,9 +62,15 @@
   }
   
   .btn.btn-danger {
-    background: hsl(0, 100%, 40%, 0.1);
+    background: hsl(0, 100%, 40%, 0.1); 
     border: 1px solid hsl(0, 100%, 40%);
     color: hsl(0, 100%, 40%);
+  }
+
+  .btn.btn-success {
+    background: hsl(120, 100%, 50);
+    border: 1px solid hsl(129, 100%, 40%);
+    color: hsl(129, 100%, 40%);
   }
   
   .btn.btn-danger:hover,
@@ -71,8 +100,18 @@
   .list {
     margin: 0;
     padding: 0;
-    margin-left: 1rem;
     list-style: none;
+    align-items:center;
+  }
+
+  .little-button {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background: hsl(0, 100%, 40%, 0.1); 
+    border: 1px solid hsl(0, 100%, 40%);
+    color: hsl(0, 100%, 40%);
+    font-weight: bold;
   }
   
   .list li:has(input:checked) label {
@@ -89,6 +128,7 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
+
   }
   
   .list li label {

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Job } from "./Job.jsx"
 
-export function JobList({ jobs, toggleJob, deleteJob }) {
+export function JobList({ jobs, toggleJob, deleteJob, deleteInterview }) {
     return (
     <ul className="list">
     {jobs.length === 0 && "No Applications"}
@@ -12,6 +12,7 @@ export function JobList({ jobs, toggleJob, deleteJob }) {
       key={job.id} 
       toggleJob={toggleJob} 
       deleteJob={deleteJob}
+      deleteInterview={deleteInterview}
       />
       )
     })}

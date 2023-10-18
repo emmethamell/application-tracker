@@ -22,10 +22,10 @@ export function NewApplicationForm({ onSubmitJob }) {
     return (
         <form onSubmit={handleSubmit} className="new-job-form">
             <div className="form-row">
-                <label htmlFor="job">position</label> 
-                <input value={newJob} onChange={e => setNewJob(e.target.value)} type="text" id="job"></input>
-                <label htmlFor="company">company</label>
-                <input value={newCompany} onChange={e => setNewCompany(e.target.value)} type="text" id="company"></input>
+                <label htmlFor="job">POSITION</label> 
+                <input value={newJob} onChange={e => setNewJob(e.target.value)} type="text" id="job" autoComplete="off"></input>
+                <label htmlFor="company">COMPANY</label>
+                <input value={newCompany} onChange={e => setNewCompany(e.target.value)} type="text" id="company" autoComplete="off"></input>
             </div>
             <button className="btn">add</button>
         </form>
