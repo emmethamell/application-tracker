@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react" //useState takes default value, and 
-import "./styles.css"
+import { useState, useEffect } from "react" 
 import { NewApplicationForm } from "./NewApplicationForm"
-import { JobList } from "./JobList"
-import { RejectionList } from "./RejectionList"
-import { InterviewList } from "./InterviewList"
-//with components in react, you can only ever return one element. In this case everything is inside the one div
-//if you want to return multiple elements from a component you can use a fragment, which is like a div wrapping everything but its empty
-export default function App() {
+import { JobList } from "./Jobs/JobList"
+import { RejectionList } from "./Rejections/RejectionList"
+import { InterviewList } from "./Interviews/InterviewList"
+import "./styles.css"
 
+export default function App() {
   const [interviews, setInterviews] = useState(() => {
     const localValue = localStorage.getItem("INTERVIEWS");
     if (localValue === null) return []
@@ -37,7 +35,6 @@ export default function App() {
   useEffect(() => { 
     localStorage.setItem("JOBS", JSON.stringify(jobs));
   }, [jobs])
-
 
   function addJob(jobTitle, companyTitle) {
 
@@ -114,12 +111,6 @@ export default function App() {
     })
   }
 
-
-
-
-
-  //the NewApplicationForm below is a react custom component we built
-  //react knows this because it starts with a capital letter
   return (
     <>
     <div className="container">

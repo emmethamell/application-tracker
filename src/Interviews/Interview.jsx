@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 
 
-export function Rejection({ id, jobTitle, companyTitle, deleteRejection}) {
-
+export function Interview({ id, jobTitle, companyTitle, erase}) {
     return (
         <li>
             {jobTitle + " for " + companyTitle}
             <button 
-            onClick={() => deleteRejection(id)} //change so that function puts in a rejections list
+            onClick={() => erase(id)} 
             className="little-button">
             X
         </button>

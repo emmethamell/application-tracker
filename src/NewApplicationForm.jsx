@@ -5,7 +5,6 @@ export function NewApplicationForm({ onSubmitJob }) {
     const [newJob, setNewJob] = useState("")
     const [newCompany, setNewCompany] = useState("")
 
-    //CALLED WHEN FORM IS SUBMITTED
     function handleSubmit(e) { 
         e.preventDefault()
         
@@ -15,9 +14,6 @@ export function NewApplicationForm({ onSubmitJob }) {
         setNewCompany("")
 
     }
-
-
-
 
     return (
         <form onSubmit={handleSubmit} className="new-job-form">
