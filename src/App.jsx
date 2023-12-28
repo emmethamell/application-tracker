@@ -105,11 +105,27 @@ export default function App() {
     })
   }
 
+  
   function erase(id) {
+    let interview = [];
+    for (let i = 0; i < interviews.length; i++) {
+      if(interviews[i].id === id) {
+        interview = interviews[i]
+        break;
+      }
+    }
+    setRejections((currentRejections) => {
+      return [
+        ...currentRejections, 
+        interview
+      ]
+    })
+
     setInterviews(currentInterviews => {
       return currentInterviews.filter(job => job.id != id);
     })
   }
+  
 
   return (
     <>
