@@ -139,6 +139,7 @@ export default function App() {
     });
   }
 
+  //deletes completely
   async function deleteRejection(id) {
     let { error } = await supabase
       .from('Rejections')
@@ -155,6 +156,7 @@ export default function App() {
     });
   }
 
+  //deletes from interviews and adds to the rejections
   async function erase(id) {
     let job;
     for (let i = 0; i < interviews.length; i++) {
