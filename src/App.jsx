@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react" 
 import { NewApplicationForm } from "./NewApplicationForm"
 import { JobList } from "./Jobs/JobList"
@@ -7,8 +8,8 @@ import "./styles.css"
 
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseUrl = "https://ajzugslajkcgxyljgftt.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqenVnc2xhamtjZ3h5bGpnZnR0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwMzgwMTE5OSwiZXhwIjoyMDE5Mzc3MTk5fQ.m8esUIUm3OkEvkKfnsyH7-mRVbsJhymh-b06NAjO2YY";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function App() {
