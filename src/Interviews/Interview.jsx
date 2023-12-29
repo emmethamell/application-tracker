@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 
 
-export function Interview({ id, jobTitle, companyTitle, erase}) {
+export function Interview({ id, job, erase}) {
     return (
         <li>
-            {jobTitle + " for " + companyTitle}
+            {job}
             <button 
             onClick={() => erase(id)} 
             className="little-button">
