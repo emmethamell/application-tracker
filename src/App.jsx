@@ -5,137 +5,204 @@ import { RejectionList } from "./Rejections/RejectionList"
 import { InterviewList } from "./Interviews/InterviewList"
 import "./styles.css"
 
+import { createClient } from "@supabase/supabase-js"
+
+const supabaseUrl = "https://ajzugslajkcgxyljgftt.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqenVnc2xhamtjZ3h5bGpnZnR0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwMzgwMTE5OSwiZXhwIjoyMDE5Mzc3MTk5fQ.m8esUIUm3OkEvkKfnsyH7-mRVbsJhymh-b06NAjO2YY";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 export default function App() {
-  const [interviews, setInterviews] = useState(() => {
-    const localValue = localStorage.getItem("INTERVIEWS");
-    if (localValue === null) return []
+  const [interviews, setInterviews] = useState([]);
+  const [pending, setPending] = useState([]);
+  const [rejections, setRejections] = useState([]);
 
-    return JSON.parse(localValue)
-  })
   useEffect(() => {
-    localStorage.setItem("INTERVIEWS", JSON.stringify(interviews));
-  }, [interviews])
+    fetchInterviews();
+    fetchPending();
+    fetchRejections();
+  }, []);
 
-  const [rejections, setRejections] = useState(() => {
-    const localValue = localStorage.getItem("REJECTIONS");
-    if (localValue === null) return []
-
-    return JSON.parse(localValue)
-  })
-  useEffect(() => {
-    localStorage.setItem("REJECTIONS", JSON.stringify(rejections));
-  }, [rejections])
-
-  const [jobs, setJobs] = useState(() => {
-    const localValue = localStorage.getItem("JOBS");
-    if (localValue === null) return []
-
-    return JSON.parse(localValue)
-  })
-  useEffect(() => { 
-    localStorage.setItem("JOBS", JSON.stringify(jobs));
-  }, [jobs])
-
-  function addJob(jobTitle, companyTitle) {
-
-    let id = crypto.randomUUID();
-    setJobs((currentJobs) => {
-      return [
-        ...currentJobs, 
-        { id, jobTitle, completed: false, companyTitle},
-      ]  
-    })
-  }
-  function toggleJob(id, completed) {
-    setJobs(currentJobs => {
-      return currentJobs.map(job => {
-        if (job.id === id) {
-          return { ...job, completed}
-        }
-
-        return job
-      })
-    })
+  async function fetchInterviews() {
+    let { data: interviews, error } = await supabase
+      .from("Interviewing")
+      .select("*");
+    if (error) console.error("Error loading interviews", error);
+    else setInterviews(interviews);
   }
 
-  function deleteInterview(id) {
-    let job = [];
-    for (let i = 0; i < jobs.length; i++) {
-      if(jobs[i].id === id) {
-        job = jobs[i]
+  async function fetchPending() {
+    let { data: pending, error } = await supabase
+      .from("Pending")
+      .select("*");
+    if (error) console.error("Error loading pending jobs", error);
+    else setPending(pending);
+  }
+
+  async function fetchRejections() {
+    let { data: rejections, error } = await supabase
+      .from("Rejections")
+      .select("*");
+    if (error) console.error("Error loading rejections", error);
+    else setRejections(rejections);
+  }
+
+  //used to be addJob
+  async function addPending(jobTitle, companyTitle) {
+    let newJob = jobTitle + " at " + companyTitle;
+    setPending(currentJobs => [...currentJobs, {id: null, job: newJob}]);
+
+    let { data, error } = await supabase
+      .from('Pending')
+      .insert({job: newJob});
+
+      if (error) {
+        console.error("Error adding job to Pending", error);
+      } else {
+        fetchPending(); // refetch the jobs from the database
+      }
+
+  }
+
+  async function deleteInterview(id) {
+    let job;
+    for (let i = 0; i < pending.length; i++) {
+      if(pending[i].id === id) {
+        job = pending[i];
         break;
       }
     }
-    setInterviews((currentInterviews) => {
-      return [
-        ...currentInterviews, 
-        job
-      ]
-    })
-    
-    setJobs(currentJobs => {
-      return currentJobs.filter(job => job.id !== id)
-    })
-  }
+    let jobName = job.job;
   
-  function deleteJob(id) { 
-    let job = [];
-    for (let i = 0; i < jobs.length; i++) {
-      if(jobs[i].id === id) {
-        job = jobs[i]
+    let { error: insertError } = await supabase
+      .from('Interviewing')
+      .insert({id:id, job: jobName});
+    if (insertError) {
+      console.error("Error adding job to Interviewing", insertError);
+      return;
+    }
+  
+    let { error: deleteError } = await supabase
+      .from('Pending')
+      .delete()
+      .match({ id: id });
+    if (deleteError) {
+      console.error("Error deleting job from Pending", deleteError);
+      // If there's an error, remove the job from Interviewing
+      await supabase
+        .from('Interviewing')
+        .delete()
+        .match({ job: jobName });
+      return;
+    }
+  
+    setInterviews((currentJobs) => [...currentJobs, { id: id, job: jobName }]);
+    setPending(currentJobs => {
+      return currentJobs.filter(job => job.id !== id)
+    });
+  }
+
+  async function deleteJob(id) {
+    let job;
+    for (let i = 0; i < pending.length; i++) {
+      if(pending[i].id === id) {
+        job = pending[i];
         break;
       }
     }
-    setRejections((currentRejections) => {
-      return [
-        ...currentRejections, 
-        job
-      ]
-    })
-
-    setJobs(currentJobs => {
-      return currentJobs.filter(job => job.id !== id)
-    })
-
-  }
-
-  function deleteRejection(id) {
-    setRejections(currentRejections => {
-      return currentRejections.filter(job => job.id !== id)
-    })
-  }
-
+    let jobName = job.job;
   
-  function erase(id) {
-    let interview = [];
+    let { error: insertError } = await supabase
+      .from('Rejections')
+      .insert({job: jobName});
+    if (insertError) {
+      console.error("Error adding job to Rejections", insertError);
+      return;
+    }
+  
+    let { error: deleteError } = await supabase
+      .from('Pending')
+      .delete()
+      .match({ id: id });
+    if (deleteError) {
+      console.error("Error deleting job from Pending", deleteError);
+      // If there's an error, remove the job from Rejections
+      await supabase
+        .from('Rejections')
+        .delete()
+        .match({ job: jobName });
+      return;
+    }
+  
+    setRejections((currentJobs) => [...currentJobs, { id: id, job: jobName }]);
+    setPending(currentJobs => {
+      return currentJobs.filter(job => job.id !== id)
+    });
+  }
+
+  async function deleteRejection(id) {
+    let { error } = await supabase
+      .from('Rejections')
+      .delete()
+      .match({ id: id });
+  
+    if (error) {
+      console.error("Error deleting job from Rejections", error);
+      return;
+    }
+  
+    setRejections(currentJobs => {
+      return currentJobs.filter(job => job.id !== id)
+    });
+  }
+
+  async function erase(id) {
+    let job;
     for (let i = 0; i < interviews.length; i++) {
       if(interviews[i].id === id) {
-        interview = interviews[i]
+        job = interviews[i];
         break;
       }
     }
-    setRejections((currentRejections) => {
-      return [
-        ...currentRejections, 
-        interview
-      ]
-    })
-
-    setInterviews(currentInterviews => {
-      return currentInterviews.filter(job => job.id != id);
-    })
+    let jobName = job.job;
+  
+    let { error: insertError } = await supabase
+      .from('Rejections')
+      .insert({job: jobName});
+    if (insertError) {
+      console.error("Error adding job to Rejections", insertError);
+      return;
+    }
+  
+    let { error: deleteError } = await supabase
+      .from('Interviewing')
+      .delete()
+      .match({ id: id });
+    if (deleteError) {
+      console.error("Error deleting job from Interviewing", deleteError);
+      // If there's an error, remove the job from Rejections
+      await supabase
+        .from('Rejections')
+        .delete()
+        .match({ job: jobName });
+      return;
+    }
+  
+    setRejections((currentJobs) => [...currentJobs, { id: id, job: jobName }]);
+    setInterviews(currentJobs => {
+      return currentJobs.filter(job => job.id !== id)
+    });
   }
+
   
 
   return (
     <>
     <div className="container">
     <div className="left">
-    <NewApplicationForm onSubmitJob={addJob}/> 
+    <NewApplicationForm onSubmitJob={addPending}/> 
   <h1 className="header">Pending applications</h1>
     <JobList 
-    jobs={jobs} 
-    toggleJob={toggleJob} 
+    jobs={pending} 
     deleteJob={deleteJob}
     deleteInterview={deleteInterview}
     />

@@ -1,9 +1,9 @@
 // eslint-disable-next-line react/prop-types
-export function Job({ id, jobTitle, companyTitle, deleteJob, deleteInterview}) {
+export function Job({ id, job, deleteJob, deleteInterview}) {
 
     return (
     <li>
-            {jobTitle + " at " + companyTitle}
+            { job }
         <button 
             onClick={() => deleteJob(id)}
             className="btn btn-danger">
